@@ -25,6 +25,7 @@ async function run() {
     await client.connect();
     const database = client.db('CoffeeDB');
     const coffeecollection = database.collection('coffeeAdd');
+    const userSingpu = database.collection('users');
 
     app.get('/coffees', async (req, res) => {
       const coffe = coffeecollection.find();
@@ -39,6 +40,11 @@ async function run() {
       res.send(result);
     });
 
+    app.get('/users', async (req, res) => {
+      const user = userSingpu.find();
+      const result = await user.toArray();
+      res.send(result);
+    });
     app.post('/coffees', async (req, res) => {
       const coffee = req.body;
       const result = await coffeecollection.insertOne(coffee);
@@ -69,6 +75,12 @@ async function run() {
       const id = req.params.id;
       const qunty = { _id: new ObjectId(id) };
       const result = await coffeecollection.deleteOne(qunty);
+      res.send(result);
+    });
+
+    app.post('/users', async (req, res) => {
+      const users = req.body;
+      const result = await userSingpu.insertOne(users);
       res.send(result);
     });
 
